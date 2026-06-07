@@ -30,4 +30,30 @@ public class ProductService {
         product.setImageData(imageFile.getBytes());
         return repository.save(product);
     }
+
+    public Product updateProduct(int id, Product product, MultipartFile imageFile) throws IOException {
+        Product existing = repository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Product not found with id : " + id));
+
+        existing.setName(product.getName());
+        existing.setDescription(product.getDescription());
+        existing.setBrand(product.getBrand());
+        existing.setPrice(product.getPrice());
+        existing.setCategory(product.getCategory());
+        existing.setReleaseDate(product.getReleaseDate());
+        existing.setProductAvailable(product.isProductAvailable());
+        existing.setStockQuantity(product.getStockQuantity());
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            product.setImageName(imageFile.getOriginalFilename());
+            product.setImageType(imageFile.getContentType());
+            product.setImageData(imageFile.getBytes());
+        }
+        
+        return repository.save(product);
+    }
+
+    public void deleteProductById(int id) {
+        repository.deleteById(id);
+    }
 }
